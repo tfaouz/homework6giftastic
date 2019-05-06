@@ -38,45 +38,54 @@ function displaygif() {
     //below doesnt work correctly
     $(".char").on("click", function () {
 
-        var character = $(this).attr("data-name");
-        var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
-            character + "&api_key=XyLGkP7nr2rT85saCWhSXP2RkOpsgCzL&limit=10&rating=pg";
-        console.log(character)
-        $.ajax({
-            url: queryURL,
-            method: "GET"
-        })
+        var state = $(this).attr("data-state");
+        // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+        // Then, set the image's data-state to animate
+        // Else set src to the data-still value
+        if (state === "still") {
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
+        } else {
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
+            var character = $(this).attr("data-name");
+            var queryURL = "https://api.giphy.com/v1/gifs/search?q=" +
+                character + "&api_key=XyLGkP7nr2rT85saCWhSXP2RkOpsgCzL&limit=10&rating=pg";
+            console.log(character)
+            $.ajax({
+                url: queryURL,
+                method: "GET"
+            })
 
-            .then(function (response) {
-                //alert(queryURL);
+                .then(function (response) {
+                    //alert(queryURL);
 
-                //alert(response);
+                    //alert(response);
 
-                var results = response.data;
+                    var results = response.data;
 
-                // goes through results
-                for (var i = 0; i < results.length; i++) {
+                    // goes through results
+                    for (var i = 0; i < results.length; i++) {
 
-                    // creates div
-                    var CharacterDiv = $("<div>");
+                        // creates div
+                        var CharacterDiv = $("<div>");
 
-                    // paragraph plus rating
-                    var para = $("<p>").text("Rating: " + results[i].rating);
+                        // paragraph plus rating
+                        var para = $("<p>").text("Rating: " + results[i].rating);
 
-                    // makes the image
-                    var CharacterImage = $("<img>");
-                    CharacterImage.attr("src", results[i].images.fixed_height.url);
+                        // makes the image
+                        var CharacterImage = $("<img>");
+                        CharacterImage.attr("src", results[i].images.fixed_height.url);
 
-                    // glues them all together
-                    CharacterDiv.append(para);
-                    CharacterDiv.append(CharacterImage);
+                        // glues them all together
+                        CharacterDiv.append(para);
+                        CharacterDiv.append(CharacterImage);
 
-                    //attaches it to char view on the other page
-                    $("#char-view").append(CharacterDiv);
-                }
-            });
-    });
+                        //attaches it to char view on the other page
+                        $("#char-view").append(CharacterDiv);
+                    }
+                });
+        });
 }
 renderButtons();
-
 $(document).on("click", ".char", displaygif);
