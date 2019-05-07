@@ -85,7 +85,8 @@ function displaygif() {
                         $("#char-view").append(CharacterDiv);
                     }
                 });
-        });
-}
+        };
+    });
+};
 renderButtons();
 $(document).on("click", ".char", displaygif);
